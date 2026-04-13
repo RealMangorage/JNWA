@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.mangorage'
+version = '0.0.1-beta'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-vfs2:2.10.0'
+}
+
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": "org.mangorage.test.Test"
+        )
+    }
+}
