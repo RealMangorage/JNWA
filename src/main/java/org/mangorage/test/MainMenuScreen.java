@@ -8,6 +8,7 @@ import org.mangorage.nsapi.api.event.KeyEvent;
 import org.mangorage.nsapi.api.event.MouseButtonEvent;
 import org.mangorage.nsapi.api.event.MouseMoveEvent;
 import org.mangorage.nsapi.api.event.MouseScrollEvent;
+import org.mangorage.test.pacman.PacManScreen;
 import org.mangorage.test.snake.SnakeMainMenuScreen;
 import org.mangorage.test.tetris.TetrisScreen;
 
@@ -38,6 +39,7 @@ public class MainMenuScreen implements Screen {
 
         games.add(new Game("Snake", SnakeMainMenuScreen::new));
         games.add(new Game("Tetris", TetrisScreen::new));
+        games.add(new Game("PacMan", PacManScreen::new));
     }
 
     @Override
