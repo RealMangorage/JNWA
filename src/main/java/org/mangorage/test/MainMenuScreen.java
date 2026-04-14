@@ -4,7 +4,7 @@ import org.mangorage.nsapi.api.Event;
 import org.mangorage.nsapi.api.Graphics;
 import org.mangorage.nsapi.api.Screen;
 import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.event.KeyEvent;
+import org.mangorage.nsapi.api.event.WindowKeyEvent;
 import org.mangorage.nsapi.api.event.MouseButtonEvent;
 import org.mangorage.nsapi.api.event.MouseMoveEvent;
 import org.mangorage.nsapi.api.event.MouseScrollEvent;
@@ -172,7 +172,7 @@ public class MainMenuScreen implements Screen {
             }
         }
 
-        if (event instanceof KeyEvent ke && ke.pressed()) {
+        if (event instanceof WindowKeyEvent ke && ke.pressed()) {
             // Note: Adjust .keyCode() or .key() based on your specific Event API
             int key = ke.keyCode();
             if (key == java.awt.event.KeyEvent.VK_UP) scrollY -= 50;

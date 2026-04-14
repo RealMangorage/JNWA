@@ -4,7 +4,7 @@ import org.mangorage.nsapi.api.Event;
 import org.mangorage.nsapi.api.Graphics;
 import org.mangorage.nsapi.api.Screen;
 import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.event.KeyEvent;
+import org.mangorage.nsapi.api.event.WindowKeyEvent;
 import org.mangorage.test.MainMenuScreen;
 
 import java.util.Random;
@@ -171,7 +171,7 @@ public final class TetrisScreen implements Screen {
 
     @Override
     public void onEvent(Event event) {
-        if (!(event instanceof KeyEvent ke) || !ke.pressed()) return;
+        if (!(event instanceof WindowKeyEvent ke) || !ke.pressed()) return;
         int code = ke.keyCode();
 
         if (code == java.awt.event.KeyEvent.VK_M) window.setScreen(new MainMenuScreen());

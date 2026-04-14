@@ -3,7 +3,7 @@ package org.mangorage.nsapi.internal.platform.windows;
 import org.mangorage.nsapi.api.Screen;
 import org.mangorage.nsapi.api.Window;
 import org.mangorage.nsapi.api.WindowConfig;
-import org.mangorage.nsapi.api.event.KeyEvent;
+import org.mangorage.nsapi.api.event.WindowKeyEvent;
 import org.mangorage.nsapi.api.event.MouseButtonEvent;
 import org.mangorage.nsapi.api.event.MouseMoveEvent;
 import org.mangorage.nsapi.api.event.MouseScrollEvent;
@@ -127,8 +127,8 @@ public final class Win32WindowImpl implements Window {
             case WM_LBUTTONUP   -> { currentScreen.onEvent(new MouseButtonEvent(0, false)); return 0; }
             case WM_RBUTTONDOWN -> { currentScreen.onEvent(new MouseButtonEvent(1, true)); return 0; }
             case WM_RBUTTONUP   -> { currentScreen.onEvent(new MouseButtonEvent(1, false)); return 0; }
-            case WM_KEYDOWN -> { currentScreen.onEvent(new KeyEvent((int)wParam, true)); return 0; }
-            case WM_KEYUP   -> { currentScreen.onEvent(new KeyEvent((int)wParam, false)); return 0; }
+            case WM_KEYDOWN -> { currentScreen.onEvent(new WindowKeyEvent((int)wParam, true)); return 0; }
+            case WM_KEYUP   -> { currentScreen.onEvent(new WindowKeyEvent((int)wParam, false)); return 0; }
             case WM_SIZE -> {
                 this.width = (int) (lParam & 0xFFFF);
                 this.height = (int) ((lParam >> 16) & 0xFFFF);

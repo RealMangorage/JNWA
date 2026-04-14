@@ -1,4 +1,4 @@
-package org.mangorage.test.misc;
+package org.mangorage.test.sprite;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

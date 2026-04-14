@@ -5,6 +5,7 @@ import org.mangorage.nsapi.api.Screen;
 import org.mangorage.nsapi.api.Window;
 import org.mangorage.nsapi.api.Event;
 import org.mangorage.nsapi.api.event.MouseMoveEvent;
+import org.mangorage.nsapi.api.event.WindowKeyEvent;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -65,7 +66,7 @@ public class TestScreen implements Screen {
             this.mouseX = x;
             this.mouseY = y;
         }
-        if (event instanceof org.mangorage.nsapi.api.event.KeyEvent(int keyCode, boolean pressed)) {
+        if (event instanceof WindowKeyEvent(int keyCode, boolean pressed)) {
             if (pressed) {
                 if (keyCode == KeyEvent.VK_E) {
                     size++;

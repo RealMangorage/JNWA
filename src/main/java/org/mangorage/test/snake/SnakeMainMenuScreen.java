@@ -4,7 +4,7 @@ import org.mangorage.nsapi.api.Event;
 import org.mangorage.nsapi.api.Graphics;
 import org.mangorage.nsapi.api.Screen;
 import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.event.KeyEvent;
+import org.mangorage.nsapi.api.event.WindowKeyEvent;
 
 import java.awt.Color;
 
@@ -68,7 +68,7 @@ public class SnakeMainMenuScreen implements Screen {
 
     @Override
     public void onEvent(Event event) {
-        if (event instanceof KeyEvent(int keyCode, boolean pressed) && pressed) {
+        if (event instanceof WindowKeyEvent(int keyCode, boolean pressed) && pressed) {
             // Start the game when Space is pressed
             if (keyCode == java.awt.event.KeyEvent.VK_SPACE) {
                 window.setScreen(new SnakeGameScreen());
