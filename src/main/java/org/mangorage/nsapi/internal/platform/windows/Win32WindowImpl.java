@@ -29,6 +29,20 @@ public final class Win32WindowImpl implements Window {
     // ---------------- WIN32 CONSTANTS ----------------
     private static final int WM_DESTROY    = 0x0002;
     private static final int WM_SIZE       = 0x0005;
+    private static final int SWP_NOZORDER     = 0x0004;
+    private static final int SWP_NOACTIVATE   = 0x0010;
+    public static final int GWL_STYLE = -16;
+    public static final int GWL_EXSTYLE = -20;
+
+    // ---------------- WINDOW STYLE FLAGS ----------------
+    public static final long WS_THICKFRAME  = 0x00040000L;
+    public static final long WS_MAXIMIZEBOX = 0x00010000L;
+
+    // ---------------- SetWindowPos FLAGS ----------------
+    public static final int SWP_NOSIZE       = 0x0001;
+    public static final int SWP_NOMOVE       = 0x0002;
+    public static final int SWP_FRAMECHANGED = 0x0020;
+
     private static final int WM_KEYDOWN    = 0x0100;
     private static final int WM_KEYUP      = 0x0101;
     private static final int WM_MOUSEMOVE  = 0x0200;
@@ -64,9 +78,13 @@ public final class Win32WindowImpl implements Window {
     private static final MethodHandle SetWindowTextW = downcall(USER32, "SetWindowTextW", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS));
     private static final MethodHandle CreateIconIndirect = downcall(USER32, "CreateIconIndirect", FunctionDescriptor.of(ADDRESS, ADDRESS));
     private static final MethodHandle SetWindowPos = downcall(USER32, "SetWindowPos", FunctionDescriptor.of(JAVA_INT, ADDRESS, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT));
+    private static final MethodHandle SetWindowLongPtr = downcall(USER32, "SetWindowLongPtrW", FunctionDescriptor.of(JAVA_LONG, ADDRESS, JAVA_INT, JAVA_LONG));
+    private static final MethodHandle GetWindowLongPtr = downcall(USER32, "GetWindowLongPtrW", FunctionDescriptor.of(JAVA_LONG, ADDRESS, JAVA_INT));
+
     private static final MethodHandle CreateDIBSection = downcall(GDI32, "CreateDIBSection", FunctionDescriptor.of(ADDRESS, ADDRESS, ADDRESS, JAVA_INT, ADDRESS, ADDRESS, JAVA_INT));
     private static final MethodHandle CreateBitmap = downcall(GDI32, "CreateBitmap", FunctionDescriptor.of(ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT, ADDRESS));
     private static final MethodHandle DeleteObject = downcall(GDI32, "DeleteObject", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+
 
     private static final StructLayout WNDCLASSEXW = MemoryLayout.structLayout(
             JAVA_INT.withName("cbSize"),
@@ -415,6 +433,44 @@ public final class Win32WindowImpl implements Window {
         tasks.offer(() -> {
             try {
                 SetWindowPos.invoke(hwnd, MemorySegment.NULL, x, y, 0, 0, 0x0001 | 0x0004 | 0x0010);
+            } catch (Throwable ignored) {}
+        });
+    }
+
+    @Override
+    public void setSize(int width, int height) {
+        tasks.offer(() -> {
+            try {
+                SetWindowPos.invoke(
+                        hwnd,
+                        MemorySegment.NULL, // HWND_TOP = NULL is fine
+                        0,
+                        0,
+                        width,
+                        height,
+                        SWP_NOZORDER | SWP_NOACTIVATE
+                );
+            } catch (Throwable ignored) {}
+        });
+    }
+
+    @Override
+    public void setSizeLock(boolean lock) {
+        tasks.offer(() -> {
+            try {
+                long style = (long) GetWindowLongPtr.invoke(hwnd, GWL_STYLE);
+
+                style &= ~WS_THICKFRAME;   // disable resize border
+                style &= ~WS_MAXIMIZEBOX;  // disable maximize resize
+
+                SetWindowLongPtr.invoke(hwnd, GWL_STYLE, style);
+
+                SetWindowPos.invoke(
+                        hwnd,
+                        MemorySegment.NULL,
+                        0, 0, 0, 0,
+                        SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED
+                );
             } catch (Throwable ignored) {}
         });
     }

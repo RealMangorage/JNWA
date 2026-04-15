@@ -27,6 +27,8 @@ public interface Window {
     Screen getScreen();
 
     void setPosition(int x, int y);
+    void setSize(int x, int y);
+    void setSizeLock(boolean lock);
 
     // ui
     void setTitle(String title);

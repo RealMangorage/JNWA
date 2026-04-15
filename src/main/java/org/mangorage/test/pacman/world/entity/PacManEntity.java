@@ -1,8 +1,7 @@
-package org.mangorage.test.pacman.entity;
+package org.mangorage.test.pacman.world.entity;
 
 import org.mangorage.nsapi.api.Graphics;
 import org.mangorage.test.misc.Direction;
-import org.mangorage.test.pacman.entity.Entity;
 import org.mangorage.test.pacman.world.WorldContext;
 import org.mangorage.test.sprite.*;
 
@@ -10,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class PacManEntity extends Entity {
+
+    record DirectionWithMode(Direction direction, boolean agro) {};
 
     private static final int TILE = 32;
 
@@ -22,15 +23,17 @@ public final class PacManEntity extends Entity {
 
     private Direction direction = Direction.EAST;
     private Direction bufferedDirection = Direction.EAST;
+    private boolean agro = false;
 
     private float speed = 225.5f; // tiles per second
 
     private final WorldContext world;
+    private final boolean update;
 
     // ===== ANIMATION =====
-    private final SpriteAnimationWithMode<Direction> anim;
+    private final SpriteAnimationWithMode<DirectionWithMode> anim;
 
-    public PacManEntity(WorldContext world, int startX, int startY) {
+    public PacManEntity(WorldContext world, int startX, int startY, boolean update) {
         this.world = world;
 
         this.tileX = startX;
@@ -42,38 +45,69 @@ public final class PacManEntity extends Entity {
         this.pixelX = startX * TILE;
         this.pixelY = startY * TILE;
 
+        this.update = update;
+
         SpriteManager sprites = new SpriteManager("assets/pacman.png");
 
-        SpriteList east = new SpriteList(List.of(
+        SpriteList east_normal = new SpriteList(List.of(
                 sprites.getSpriteViaPadding(17, 0, 38, 12),
                 sprites.getSpriteViaPadding(17, 1, 38, 12),
                 sprites.getSpriteViaPadding(17, 2, 38, 12)
         ));
 
-        SpriteList south = new SpriteList(List.of(
+        SpriteList south_normal = new SpriteList(List.of(
                 sprites.getSpriteViaPadding(17, 3, 38, 12),
                 sprites.getSpriteViaPadding(17, 4, 38, 12),
                 sprites.getSpriteViaPadding(17, 5, 38, 12)
         ));
 
-        SpriteList west = new SpriteList(List.of(
+        SpriteList west_normal = new SpriteList(List.of(
                 sprites.getSpriteViaPadding(17, 6, 38, 12),
                 sprites.getSpriteViaPadding(17, 7, 38, 12),
                 sprites.getSpriteViaPadding(17, 8, 38, 12)
         ));
 
-        SpriteList north = new SpriteList(List.of(
+        SpriteList north_normal = new SpriteList(List.of(
                 sprites.getSpriteViaPadding(17, 9, 38, 12),
                 sprites.getSpriteViaPadding(17, 10, 38, 12),
                 sprites.getSpriteViaPadding(17, 11, 38, 12)
         ));
 
+        SpriteList east_agro = new SpriteList(List.of(
+                sprites.getSpriteViaPadding(18, 0, 38, 12),
+                sprites.getSpriteViaPadding(18, 1, 38, 12),
+                sprites.getSpriteViaPadding(18, 2, 38, 12)
+        ));
+
+        SpriteList south_agro = new SpriteList(List.of(
+                sprites.getSpriteViaPadding(18, 3, 38, 12),
+                sprites.getSpriteViaPadding(18, 4, 38, 12),
+                sprites.getSpriteViaPadding(18, 5, 38, 12)
+        ));
+
+        SpriteList west_agro = new SpriteList(List.of(
+                sprites.getSpriteViaPadding(18, 6, 38, 12),
+                sprites.getSpriteViaPadding(18, 7, 38, 12),
+                sprites.getSpriteViaPadding(18, 8, 38, 12)
+        ));
+
+        SpriteList north_agro = new SpriteList(List.of(
+                sprites.getSpriteViaPadding(18, 9, 38, 12),
+                sprites.getSpriteViaPadding(18, 10, 38, 12),
+                sprites.getSpriteViaPadding(18, 11, 38, 12)
+        ));
+
         anim = new SpriteAnimationWithMode<>(
                 Map.of(
-                        Direction.EAST, east,
-                        Direction.SOUTH, south,
-                        Direction.WEST, west,
-                        Direction.NORTH, north
+                        new DirectionWithMode(Direction.EAST, false), east_normal,
+                        new DirectionWithMode(Direction.SOUTH, false), south_normal,
+                        new DirectionWithMode(Direction.WEST, false), west_normal,
+                        new DirectionWithMode(Direction.NORTH, false), north_normal,
+
+                        new DirectionWithMode(Direction.EAST, true), east_agro,
+                        new DirectionWithMode(Direction.SOUTH, true), south_agro,
+                        new DirectionWithMode(Direction.WEST, true), west_agro,
+                        new DirectionWithMode(Direction.NORTH, true), north_agro
                 ),
                 3,
                 100
@@ -92,6 +126,9 @@ public final class PacManEntity extends Entity {
         anim.update();
 
         float step = speed * delta;
+
+        // Ghost Placeholder
+        if (!update) return;
 
         // === ARRIVED AT TILE ===
         if (tileX == targetX && tileY == targetY) {
@@ -136,11 +173,19 @@ public final class PacManEntity extends Entity {
         }
     }
 
+    public boolean isAgro() {
+        return agro;
+    }
+
+    public void setAgro(boolean agro) {
+        this.agro = agro;
+    }
+
     // ===== RENDER =====
     @Override
     public void render(Graphics g) {
         g.drawImage(
-                anim.get(direction),
+                anim.get(new DirectionWithMode(direction, agro)),
                 (int) pixelX,
                 (int) pixelY,
                 TILE,

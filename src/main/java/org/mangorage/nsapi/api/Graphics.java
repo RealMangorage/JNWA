@@ -14,6 +14,11 @@ public interface Graphics {
     void drawCircle(int x, int y, int r);
     void fillCircle(int x, int y, int r);
 
+    void drawOval(int x, int y, int w, int h);
+    void fillOval(int x, int y, int w, int h);
+    void drawRoundRect(int x, int y, int w, int h, int arcWidth, int arcHeight);
+    void fillRoundRect(int x, int y, int w, int h, int arcWidth, int arcHeight);
+
     void setColor(int argb);
     void clear(int argb);
 

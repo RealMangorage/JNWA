@@ -1,4 +1,4 @@
-package org.mangorage.test.pacman.entity;
+package org.mangorage.test.pacman.world.entity;
 
 import org.mangorage.nsapi.api.Graphics;
 

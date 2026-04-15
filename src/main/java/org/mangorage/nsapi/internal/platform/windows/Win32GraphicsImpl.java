@@ -37,8 +37,11 @@ public final class Win32GraphicsImpl implements Graphics {
     private static final MethodHandle BitBlt = downcall(GDI32, "BitBlt", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT));
     private static final MethodHandle DeleteObject = downcall(GDI32, "DeleteObject", FunctionDescriptor.of(JAVA_INT, ADDRESS));
     private static final MethodHandle DeleteDC = downcall(GDI32, "DeleteDC", FunctionDescriptor.of(JAVA_INT, ADDRESS));
+
     private static final MethodHandle Rectangle = downcall(GDI32, "Rectangle", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT));
     private static final MethodHandle Ellipse = downcall(GDI32, "Ellipse", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT));
+    private static final MethodHandle RoundRect = downcall(GDI32, "RoundRect", FunctionDescriptor.of(JAVA_INT, ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT, JAVA_INT));
+
     private static final MethodHandle CreateSolidBrush = downcall(GDI32, "CreateSolidBrush", FunctionDescriptor.of(ADDRESS, JAVA_INT));
     private static final MethodHandle CreatePen = downcall(GDI32, "CreatePen", FunctionDescriptor.of(ADDRESS, JAVA_INT, JAVA_INT, JAVA_INT));
     private static final MethodHandle GetStockObject = downcall(GDI32, "GetStockObject", FunctionDescriptor.of(ADDRESS, JAVA_INT));
@@ -253,6 +256,61 @@ public final class Win32GraphicsImpl implements Graphics {
     @Override
     public void fillRect(int x, int y, int w, int h) {
         renderRect(x, y, w, h, false);
+    }
+
+    // =========================
+    // Shapes, Circles & Ellipses
+    // =========================
+
+    // --- ADDED OVAL METHODS ---
+    @Override
+    public void drawOval(int x, int y, int w, int h) {
+        renderEllipse(x, y, w, h, true);
+    }
+
+    @Override
+    public void fillOval(int x, int y, int w, int h) {
+        renderEllipse(x, y, w, h, false);
+    }
+
+    // --- ADDED ROUND RECT METHODS ---
+    @Override
+    public void drawRoundRect(int x, int y, int w, int h, int arcWidth, int arcHeight) {
+        renderRoundRect(x, y, w, h, arcWidth, arcHeight, true);
+    }
+
+    @Override
+    public void fillRoundRect(int x, int y, int w, int h, int arcWidth, int arcHeight) {
+        renderRoundRect(x, y, w, h, arcWidth, arcHeight, false);
+    }
+
+    private void renderRoundRect(int x, int y, int w, int h, int arcWidth, int arcHeight, boolean outline) {
+        try {
+            MemorySegment pen = outline
+                    ? (MemorySegment) CreatePen.invoke(0, 1, currentColorRef)
+                    : (MemorySegment) GetStockObject.invoke(8); // NULL_PEN
+
+            MemorySegment brush = outline
+                    ? (MemorySegment) GetStockObject.invoke(5) // NULL_BRUSH
+                    : (MemorySegment) CreateSolidBrush.invoke(currentColorRef);
+
+            MemorySegment oldP = (MemorySegment) SelectObject.invoke(hdcMem, pen);
+            MemorySegment oldB = (MemorySegment) SelectObject.invoke(hdcMem, brush);
+
+            // GDI RoundRect takes (hdc, left, top, right, bottom, ellipse_width, ellipse_height)
+            RoundRect.invoke(hdcMem, x, y, x + w, y + h, arcWidth, arcHeight);
+
+            SelectObject.invoke(hdcMem, oldP);
+            SelectObject.invoke(hdcMem, oldB);
+
+            if (outline)
+                DeleteObject.invoke(pen);
+            else
+                DeleteObject.invoke(brush);
+
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     // =========================

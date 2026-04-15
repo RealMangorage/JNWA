@@ -1,7 +1,6 @@
 package org.mangorage.test.sprite;
 
 import java.awt.*;
-import java.util.HashMap;
 import java.util.Map;
 
 public final class SpriteAnimationWithMode<T> {
