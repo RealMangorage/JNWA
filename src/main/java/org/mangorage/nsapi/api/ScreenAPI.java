@@ -30,16 +30,15 @@ public final class ScreenAPI {
         windows.remove(id);
     }
 
-    public Window createWindow(String windowId, String title, int width, int height) {
-        WindowConfig config = new WindowConfig(title, width, height);
-        final var window = createWindow(windowId, config, () -> unregister(windowId));
+    public Window createWindow(String windowId, String title) {
+        final var window = createWindow(windowId, () -> unregister(windowId));
+        window.setTitle(title);
         register(windowId, window);
         return window;
     }
 
-    private Window createWindow(String windowId, WindowConfig config, Runnable runnable) {
-        final var os = System.getProperty("os.name");
-        return new Win32WindowImpl(windowId, config, runnable);
+    private Window createWindow(String windowId, Runnable runnable) {
+        return new Win32WindowImpl(windowId, runnable);
     }
 
 }

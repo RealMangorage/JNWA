@@ -2,6 +2,7 @@ package org.mangorage.test.pacman;
 
 import org.mangorage.nsapi.api.*;
 import org.mangorage.nsapi.api.event.WindowKeyEvent;
+import org.mangorage.test.MainMenuScreen;
 import org.mangorage.test.misc.Direction;
 import org.mangorage.test.pacman.world.entity.PacManEntity;
 import org.mangorage.test.pacman.world.WorldContext;
@@ -39,6 +40,7 @@ public final class PacManScreen implements Screen {
     private final WorldContext world = new WorldContext(MAP, TILE);
     private final PacManEntity pacman;
 
+    private Window window;
     private long lastTime = System.nanoTime();
     private int tickCount = 0;
 
@@ -48,6 +50,8 @@ public final class PacManScreen implements Screen {
 
     @Override
     public void init(Window window) {
+        this.window = window;
+
         window.setTitle("Java Pac-Man Arcade");
 
         // Calculate dimensions based on the MAP array
@@ -190,6 +194,7 @@ public final class PacManScreen implements Screen {
             case KeyEvent.VK_DOWN -> pacman.setBufferedDirection(Direction.SOUTH);
             case KeyEvent.VK_LEFT -> pacman.setBufferedDirection(Direction.WEST);
             case KeyEvent.VK_RIGHT -> pacman.setBufferedDirection(Direction.EAST);
+            case KeyEvent.VK_M -> window.setScreen(new MainMenuScreen());
         }
     }
 

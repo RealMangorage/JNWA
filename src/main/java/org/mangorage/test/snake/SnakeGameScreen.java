@@ -31,7 +31,8 @@ public final class SnakeGameScreen implements Screen {
     @Override
     public void init(Window window) {
         this.window = window;
-        window.setTitle("Snake Game");
+        window.setTitle("Snake Game -> Score: 0");
+        window.setSize(1200, 800);
         reset();
     }
 

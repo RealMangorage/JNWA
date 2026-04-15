@@ -36,6 +36,8 @@ public class MainMenuScreen implements Screen {
     public void init(Window window) {
         this.window = window;
         window.setTitle("Game Hub");
+        window.setSizeLock(false);
+        window.setSize(600, 1000);
 
         games.add(new Game("Snake", SnakeMainMenuScreen::new));
         games.add(new Game("Tetris", TetrisScreen::new));

@@ -13,7 +13,7 @@ public final class Test {
 
         var screen = new MainMenuScreen();
 
-        Window window = api.createWindow("win_1", "Test", 800, 600);
+        Window window = api.createWindow("win_1", "Test");
 
         final var icon = getInternalIcon("IconExample.png");
         if (icon != null) {

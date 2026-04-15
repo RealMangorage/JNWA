@@ -103,25 +103,23 @@ public final class Win32WindowImpl implements Window {
 
     // ---------------- STATE ----------------
     private final String id;
-    private final WindowConfig config;
     private final Runnable unregisterHook;
 
     private volatile boolean running = true;
     private volatile boolean visible = false;
+
     private volatile int width;
     private volatile int height;
+    private volatile String title = "Untitled";
 
     private MemorySegment hwnd;
     private Screen currentScreen = new EmptyScreen();
     private final ConcurrentLinkedQueue<Runnable> tasks = new ConcurrentLinkedQueue<>();
     private Thread thread;
 
-    public Win32WindowImpl(String id, WindowConfig config, Runnable unregisterHook) {
+    public Win32WindowImpl(String id, Runnable unregisterHook) {
         this.id = id;
-        this.config = config;
         this.unregisterHook = unregisterHook;
-        this.width = config.width();
-        this.height = config.height();
     }
 
 
@@ -325,7 +323,7 @@ public final class Win32WindowImpl implements Window {
             this.hwnd = (MemorySegment) CreateWindowExW.invoke(
                     0,
                     className,
-                    arena.allocateFrom(config.title(), StandardCharsets.UTF_16LE),
+                    arena.allocateFrom(title, StandardCharsets.UTF_16LE),
                     WS_OVERLAPPEDWINDOW | WS_VISIBLE,
                     100,
                     100,
@@ -422,6 +420,7 @@ public final class Win32WindowImpl implements Window {
     @Override
     public void setTitle(String title) {
         tasks.offer(() -> {
+            this.title = title;
             try (Arena arena = Arena.ofConfined()) {
                 SetWindowTextW.invoke(hwnd, arena.allocateFrom(title, StandardCharsets.UTF_16LE));
             } catch (Throwable ignored) {}
@@ -440,19 +439,24 @@ public final class Win32WindowImpl implements Window {
     @Override
     public void setSize(int width, int height) {
         tasks.offer(() -> {
+            this.width = width;
+            this.height = height;
+
             try {
                 SetWindowPos.invoke(
                         hwnd,
                         MemorySegment.NULL, // HWND_TOP = NULL is fine
                         0,
                         0,
-                        width,
-                        height,
+                        this.width,
+                        this.height,
                         SWP_NOZORDER | SWP_NOACTIVATE
                 );
             } catch (Throwable ignored) {}
         });
     }
+
+    private long originalStyle = -1;
 
     @Override
     public void setSizeLock(boolean lock) {
@@ -460,8 +464,19 @@ public final class Win32WindowImpl implements Window {
             try {
                 long style = (long) GetWindowLongPtr.invoke(hwnd, GWL_STYLE);
 
-                style &= ~WS_THICKFRAME;   // disable resize border
-                style &= ~WS_MAXIMIZEBOX;  // disable maximize resize
+                // cache original style once
+                if (originalStyle == -1) {
+                    originalStyle = style;
+                }
+
+                if (lock) {
+                    // remove resize + maximize
+                    style &= ~WS_THICKFRAME;
+                    style &= ~WS_MAXIMIZEBOX;
+                } else {
+                    // restore original style
+                    style = originalStyle;
+                }
 
                 SetWindowLongPtr.invoke(hwnd, GWL_STYLE, style);
 
@@ -474,7 +489,6 @@ public final class Win32WindowImpl implements Window {
             } catch (Throwable ignored) {}
         });
     }
-
     @Override
     public void setScreen(Screen screen) {
         tasks.offer(() -> {

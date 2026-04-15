@@ -48,7 +48,8 @@ public final class TetrisScreen implements Screen {
     @Override
     public void init(Window window) {
         this.window = window;
-        window.setTitle("Tetris");
+        window.setTitle("Tetris - Score: 0");
+        window.setSize(600, 1000);
         spawnPiece();
     }
 
@@ -124,6 +125,7 @@ public final class TetrisScreen implements Screen {
                 pieceY++;
             } else {
                 lockPiece();
+                window.setTitle("Tetris Game -> Score: " + score);
             }
             lastFall = now;
         }

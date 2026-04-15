@@ -28,9 +28,7 @@ public class ChaosMain {
         for (int i = 0; i < windowCount; i++) {
             Window window = api.createWindow(
                     "win_" + i,
-                    "Chaos " + i,
-                    300,
-                    200
+                    "Chaos " + i
             );
 
             var icon = getInternalIcon("IconExample.png");

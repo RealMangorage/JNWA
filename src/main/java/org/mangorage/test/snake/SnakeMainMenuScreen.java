@@ -17,6 +17,7 @@ public class SnakeMainMenuScreen implements Screen {
         this.window = window;
         this.startTime = System.currentTimeMillis();
         window.setTitle("Snake Game - Main Menu");
+        window.setSize(1200, 800);
     }
 
     @Override
