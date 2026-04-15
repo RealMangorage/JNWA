@@ -1,7 +1,7 @@
 package org.mangorage.jnwa.internal.platform.windows;
 
-import org.mangorage.jnwa.api.Screen;
-import org.mangorage.jnwa.api.Window;
+import org.mangorage.jnwa.api.screen.Screen;
+import org.mangorage.jnwa.api.window.Window;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
 import org.mangorage.jnwa.api.event.MouseButtonEvent;
 import org.mangorage.jnwa.api.event.MouseMoveEvent;

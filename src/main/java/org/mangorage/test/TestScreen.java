@@ -1,9 +1,9 @@
 package org.mangorage.test;
 
-import org.mangorage.jnwa.api.Graphics;
-import org.mangorage.jnwa.api.Screen;
-import org.mangorage.jnwa.api.Window;
-import org.mangorage.jnwa.api.Event;
+import org.mangorage.jnwa.api.window.Graphics;
+import org.mangorage.jnwa.api.screen.Screen;
+import org.mangorage.jnwa.api.window.Window;
+import org.mangorage.jnwa.api.event.Event;
 import org.mangorage.jnwa.api.event.MouseMoveEvent;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
 

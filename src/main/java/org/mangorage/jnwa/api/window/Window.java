@@ -1,4 +1,6 @@
-package org.mangorage.jnwa.api;
+package org.mangorage.jnwa.api.window;
+
+import org.mangorage.jnwa.api.screen.Screen;
 
 public interface Window {
 

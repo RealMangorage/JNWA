@@ -1,14 +1,14 @@
-package org.mangorage.jnwa.api;
+package org.mangorage.jnwa.api.window;
 
 import org.mangorage.jnwa.internal.platform.windows.Win32WindowImpl;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class ScreenAPI {
-    private static final ScreenAPI API = new ScreenAPI();
+public final class WindowAPI {
+    private static final WindowAPI API = new WindowAPI();
 
-    public static ScreenAPI of() {
+    public static WindowAPI of() {
         return API;
     }
 

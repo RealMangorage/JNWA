@@ -1,6 +1,6 @@
 package org.mangorage.gamehub.pacman.world.entity;
 
-import org.mangorage.jnwa.api.Graphics;
+import org.mangorage.jnwa.api.window.Graphics;
 import org.mangorage.gamehub.misc.Direction;
 import org.mangorage.gamehub.pacman.world.WorldContext;
 import org.mangorage.gamehub.sprite.*;

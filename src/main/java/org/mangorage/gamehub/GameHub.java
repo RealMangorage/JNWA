@@ -1,7 +1,7 @@
 package org.mangorage.gamehub;
 
-import org.mangorage.jnwa.api.ScreenAPI;
-import org.mangorage.jnwa.api.Window;
+import org.mangorage.jnwa.api.window.WindowAPI;
+import org.mangorage.jnwa.api.window.Window;
 
 import java.io.IOException;
 
@@ -9,9 +9,9 @@ public final class GameHub {
 
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        ScreenAPI api = ScreenAPI.of();
+        WindowAPI api = WindowAPI.of();
 
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 1; i++) {
             var screen = new MainMenuScreen();
 
             Window window = api.createWindow("win_" + i, "GameHub");

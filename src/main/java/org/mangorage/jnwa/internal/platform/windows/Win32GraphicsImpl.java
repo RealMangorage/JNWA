@@ -1,6 +1,6 @@
 package org.mangorage.jnwa.internal.platform.windows;
 
-import org.mangorage.jnwa.api.Graphics;
+import org.mangorage.jnwa.api.window.Graphics;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;

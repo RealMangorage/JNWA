@@ -1,7 +1,7 @@
 package org.mangorage.jnwa.internal.platform;
 
-import org.mangorage.jnwa.api.Screen;
-import org.mangorage.jnwa.api.Event;
+import org.mangorage.jnwa.api.screen.Screen;
+import org.mangorage.jnwa.api.event.Event;
 
 public class EmptyScreen implements Screen {
     @Override

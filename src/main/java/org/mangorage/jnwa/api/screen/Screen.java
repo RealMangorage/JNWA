@@ -1,4 +1,8 @@
-package org.mangorage.jnwa.api;
+package org.mangorage.jnwa.api.screen;
+
+import org.mangorage.jnwa.api.event.Event;
+import org.mangorage.jnwa.api.window.Graphics;
+import org.mangorage.jnwa.api.window.Window;
 
 public interface Screen {
 

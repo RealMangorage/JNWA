@@ -1,4 +1,4 @@
-package org.mangorage.jnwa.api;
+package org.mangorage.jnwa.api.window;
 
 import java.awt.Image;
 

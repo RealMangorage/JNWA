@@ -1,9 +1,9 @@
 package org.mangorage.gamehub.snake;
 
-import org.mangorage.jnwa.api.Graphics;
-import org.mangorage.jnwa.api.Screen;
-import org.mangorage.jnwa.api.Window;
-import org.mangorage.jnwa.api.Event;
+import org.mangorage.jnwa.api.window.Graphics;
+import org.mangorage.jnwa.api.screen.Screen;
+import org.mangorage.jnwa.api.window.Window;
+import org.mangorage.jnwa.api.event.Event;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
 import org.mangorage.gamehub.MainMenuScreen;
 
@@ -93,7 +93,7 @@ public final class SnakeGameScreen implements Screen {
 
     @Override
     public void render(Graphics g, Window window) {
-        g.clear(0xFF000000);
+        g.clear(dead ? 0xFF330000 : 0xFF1A1A1A);
         g.setColor(dead ? 0xFF330000 : 0xFF1A1A1A);
         g.fillRect(0, 0, g.width(), g.height());
 
@@ -124,6 +124,8 @@ public final class SnakeGameScreen implements Screen {
             g.renderText("Score: " + snake.size(), 20, 20, 20, false);
             g.setColor(0x88FFFFFF);
             g.renderText("[M] Main Menu", 20, 50, 18, false);
+            g.renderText("[R] Reset Game", 20, 75, 18, false);
+            g.renderText("[F2] Kill Snake", 20, 100, 18, false);
         }
     }
 

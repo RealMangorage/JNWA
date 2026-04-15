@@ -1,7 +1,7 @@
 package org.mangorage.test;
 
-import org.mangorage.jnwa.api.ScreenAPI;
-import org.mangorage.jnwa.api.Window;
+import org.mangorage.jnwa.api.window.WindowAPI;
+import org.mangorage.jnwa.api.window.Window;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import static org.mangorage.gamehub.GameHub.getInternalIcon;
 public class ChaosMain {
 
     public static void main(String[] args) throws InterruptedException {
-        ScreenAPI api = ScreenAPI.of();
+        WindowAPI api = WindowAPI.of();
         TestScreen screen = new TestScreen(null);
 
         // ---- Get total virtual desktop bounds ----

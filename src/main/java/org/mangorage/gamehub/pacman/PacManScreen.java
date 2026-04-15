@@ -1,11 +1,14 @@
 package org.mangorage.gamehub.pacman;
 
-import org.mangorage.jnwa.api.*;
+import org.mangorage.jnwa.api.event.Event;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
 import org.mangorage.gamehub.MainMenuScreen;
 import org.mangorage.gamehub.misc.Direction;
 import org.mangorage.gamehub.pacman.world.entity.PacManEntity;
 import org.mangorage.gamehub.pacman.world.WorldContext;
+import org.mangorage.jnwa.api.window.Graphics;
+import org.mangorage.jnwa.api.screen.Screen;
+import org.mangorage.jnwa.api.window.Window;
 
 import java.awt.event.KeyEvent;
 
