@@ -23,37 +23,55 @@ import static org.mangorage.jnwa.internal.InternalUtil.downcall;
 
 public final class Win32WindowImpl implements Window {
 
-    // ---------------- WIN32 CONSTANTS ----------------
-    private static final int WM_DESTROY    = 0x0002;
-    private static final int WM_SIZE       = 0x0005;
-    private static final int SWP_NOZORDER     = 0x0004;
-    private static final int SWP_NOACTIVATE   = 0x0010;
-    public static final int GWL_STYLE = -16;
-    public static final int GWL_EXSTYLE = -20;
+    // ======================================================
+    //                      WINDOW MESSAGES
+    // ======================================================
+    private static final int WM_DESTROY      = 0x0002;
+    private static final int WM_MOVE         = 0x0003;
+    private static final int WM_SIZE         = 0x0005;
 
-    // ---------------- WINDOW STYLE FLAGS ----------------
-    public static final long WS_THICKFRAME  = 0x00040000L;
-    public static final long WS_MAXIMIZEBOX = 0x00010000L;
+    private static final int WM_KEYDOWN      = 0x0100;
+    private static final int WM_KEYUP        = 0x0101;
 
-    // ---------------- SetWindowPos FLAGS ----------------
+    private static final int WM_MOUSEMOVE    = 0x0200;
+    private static final int WM_LBUTTONDOWN  = 0x0201;
+    private static final int WM_LBUTTONUP    = 0x0202;
+    private static final int WM_RBUTTONDOWN  = 0x0204;
+    private static final int WM_RBUTTONUP    = 0x0205;
+    private static final int WM_MBUTTONDOWN  = 0x0207;
+    private static final int WM_MBUTTONUP    = 0x0208;
+    private static final int WM_MOUSEWHEEL   = 0x020A;
+
+
+    // ======================================================
+//                  WINDOW STYLE FLAGS (GWL_STYLE)
+// ======================================================
+    public static final long WS_THICKFRAME   = 0x00040000L;
+    public static final long WS_MAXIMIZEBOX  = 0x00010000L;
+    public static final int  WS_OVERLAPPEDWINDOW = 0x00CF0000;
+    public static final int  WS_VISIBLE      = 0x10000000;
+
+
+    // ======================================================
+    //                  SETWINDOWPOS FLAGS
+    // ======================================================
     public static final int SWP_NOSIZE       = 0x0001;
     public static final int SWP_NOMOVE       = 0x0002;
+    public static final int SWP_NOZORDER     = 0x0004;
+    public static final int SWP_NOACTIVATE   = 0x0010;
     public static final int SWP_FRAMECHANGED = 0x0020;
 
-    private static final int WM_KEYDOWN    = 0x0100;
-    private static final int WM_KEYUP      = 0x0101;
-    private static final int WM_MOUSEMOVE  = 0x0200;
-    private static final int WM_LBUTTONDOWN = 0x0201;
-    private static final int WM_LBUTTONUP   = 0x0202;
-    private static final int WM_RBUTTONDOWN = 0x0204;
-    private static final int WM_RBUTTONUP   = 0x0205;
-    private static final int WM_MBUTTONDOWN = 0x0207;
-    private static final int WM_MBUTTONUP   = 0x0208;
-    private static final int WM_MOUSEWHEEL  = 0x020A;
 
-    private static final int IDC_ARROW  = 32512;
-    private static final int WS_OVERLAPPEDWINDOW = 0x00CF0000;
-    private static final int WS_VISIBLE = 0x10000000;
+    // ======================================================
+    //                      SYSTEM RESOURCES
+    // ======================================================
+    private static final int IDC_ARROW = 32512;
+
+
+    // ======================================================
+    //                      WINDOW INDEXES
+    // ======================================================
+    public static final int GWL_STYLE = -16;
 
     // ---------------- WIN32 LIBS ----------------
     private static final SymbolLookup USER32 = SymbolLookup.libraryLookup("user32", Arena.global());
@@ -189,6 +207,18 @@ public final class Win32WindowImpl implements Window {
             case WM_SIZE -> {
                 width = (int) (lParam & 0xFFFF);
                 height = (int) ((lParam >> 16) & 0xFFFF);
+                return 0;
+            }
+
+            case WM_MOVE -> {
+                int lp = (int) lParam;
+
+                int x = (short) (lp & 0xFFFF);
+                int y = (short) ((lp >> 16) & 0xFFFF);
+
+                this.posX = x;
+                this.posY = y;
+
                 return 0;
             }
 

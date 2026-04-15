@@ -1,38 +1,110 @@
 package org.mangorage.test;
 
-import org.mangorage.jnwa.api.ScreenAPI;
-import org.mangorage.jnwa.api.Window;
+import jdk.incubator.vector.FloatVector;
+import jdk.incubator.vector.VectorSpecies;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.StructuredTaskScope;
 
 public final class Test {
 
+    public static void main(String[] args) throws Exception {
 
-    public static void main(String[] args) throws InterruptedException, IOException {
-        ScreenAPI api = ScreenAPI.of();
+        System.out.println("=== WAIT FOR ALL ===");
+        waitForAllExample();
 
-        for (int i = 0; i < 2; i++) {
-            var screen = new MainMenuScreen();
+        System.out.println("\n=== FAIL FAST ===");
+        failFastExample();
 
-            Window window = api.createWindow("win_" + i, "Test");
-            window.setPosition(100, 100);
+        System.out.println("\n=== RACE (FIRST RESULT WINS) ===");
+        raceExample();
+    }
 
-            final var icon = getInternalIcon("IconExample.png");
-            if (icon != null) {
-                window.setIcon(icon);
-            }
+    // ------------------------------------------------------------
+    // 1. WAIT FOR ALL TASKS
+    // ------------------------------------------------------------
+    static void waitForAllExample() throws Exception {
 
-            window.show();
-            window.setScreen(screen);
-            window.start();
+        try (var scope = StructuredTaskScope.open()) {
+
+            var userTask = scope.fork(() -> fetchUser());
+            var orderTask = scope.fork(() -> fetchOrder());
+
+            scope.join(); // wait for both
+
+            String user = userTask.get();
+            String order = orderTask.get();
+
+            System.out.println("User: " + user);
+            System.out.println("Order: " + order);
         }
     }
 
-    public static byte[] getInternalIcon(String path) {
-        try (final var IS = Thread.currentThread().getContextClassLoader().getResourceAsStream(path)) {
-            return IS == null ? null : IS.readAllBytes();
-        } catch (IOException e) {
-            return null;
+    // ------------------------------------------------------------
+    // 2. FAIL FAST (cancel others if one fails)
+    // ------------------------------------------------------------
+    static void failFastExample() throws Exception {
+
+        try (var scope = StructuredTaskScope.open(
+                StructuredTaskScope.Joiner.awaitAllSuccessfulOrThrow()
+        )) {
+
+            var goodTask = scope.fork(() -> fetchUser());
+
+            var badTask = scope.fork(() -> {
+                Thread.sleep(200);
+                throw new RuntimeException("Database exploded");
+            });
+
+            scope.join(); // throws immediately on failure
+
+            // may not reach here if one fails
+            System.out.println(goodTask.get());
+            System.out.println(badTask.get());
+        } catch (Exception e) {
+            System.out.println("Failed fast: " + e.getMessage());
         }
+    }
+
+    // ------------------------------------------------------------
+    // 3. RACE (first successful result wins)
+    // ------------------------------------------------------------
+    static void raceExample() throws Exception {
+
+        try (var scope = StructuredTaskScope.open(
+                StructuredTaskScope.Joiner.<String>anySuccessfulOrThrow()
+        )) {
+
+            scope.fork(() -> slowService("A", 500));
+            scope.fork(() -> slowService("B", 200));
+            scope.fork(() -> slowService("C", 350));
+
+            String result = scope.join(); // first successful wins
+
+            System.out.println("Winner: " + result);
+        }
+    }
+
+    // ------------------------------------------------------------
+    // MOCK METHODS
+    // ------------------------------------------------------------
+
+    static String fetchUser() throws InterruptedException {
+        Thread.sleep(300);
+        return "User{id=1, name=Andy}";
+    }
+
+    static String fetchOrder() throws InterruptedException {
+        Thread.sleep(400);
+        return "Order{total=42.99}";
+    }
+
+    static String slowService(String name, int delayMs) throws InterruptedException {
+        Thread.sleep(delayMs);
+        return "Response from service " + name;
     }
 }

@@ -1,4 +1,4 @@
-package org.mangorage.test.pacman.world.entity;
+package org.mangorage.gamehub.pacman.world.entity;
 
 import org.mangorage.jnwa.api.Graphics;
 

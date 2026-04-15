@@ -14,8 +14,16 @@ dependencies {
     implementation 'org.apache.commons:commons-vfs2:2.10.0'
 }
 
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ["--add-modules", "jdk.incubator.vector", "--enable-preview"]
+}
+
 tasks.withType(JavaExec).configureEach {
-    jvmArgs += "--enable-native-access=ALL-UNNAMED"
+    jvmArgs += [
+            "--enable-native-access=ALL-UNNAMED",
+            "--add-modules=jdk.incubator.vector",
+            "--enable-preview"
+    ]
 }
 
 jar {
@@ -27,5 +35,5 @@ jar {
 }
 
 application {
-    mainClass = 'org.mangorage.test.Test'
+    mainClass = 'org.mangorage.gamehub.GameHub'
 }

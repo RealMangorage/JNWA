@@ -1,4 +1,4 @@
-package org.mangorage.test.misc;
+package org.mangorage.gamehub.misc;
 
 public enum Direction {
     NORTH(0, -1),

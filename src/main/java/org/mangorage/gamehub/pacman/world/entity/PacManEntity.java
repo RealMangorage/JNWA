@@ -1,9 +1,9 @@
-package org.mangorage.test.pacman.world.entity;
+package org.mangorage.gamehub.pacman.world.entity;
 
 import org.mangorage.jnwa.api.Graphics;
-import org.mangorage.test.misc.Direction;
-import org.mangorage.test.pacman.world.WorldContext;
-import org.mangorage.test.sprite.*;
+import org.mangorage.gamehub.misc.Direction;
+import org.mangorage.gamehub.pacman.world.WorldContext;
+import org.mangorage.gamehub.sprite.*;
 
 import java.util.List;
 import java.util.Map;

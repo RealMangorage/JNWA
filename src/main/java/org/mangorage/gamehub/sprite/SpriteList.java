@@ -1,4 +1,4 @@
-package org.mangorage.test.sprite;
+package org.mangorage.gamehub.sprite;
 
 import java.awt.*;
 import java.util.List;

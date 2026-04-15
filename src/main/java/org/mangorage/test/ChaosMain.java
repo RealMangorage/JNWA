@@ -1,4 +1,4 @@
-package org.mangorage.test.misc;
+package org.mangorage.test;
 
 import org.mangorage.jnwa.api.ScreenAPI;
 import org.mangorage.jnwa.api.Window;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 
-import static org.mangorage.test.Test.getInternalIcon;
+import static org.mangorage.gamehub.GameHub.getInternalIcon;
 
 public class ChaosMain {
 

@@ -1,18 +1,21 @@
-package org.mangorage.test.sprite;
+package org.mangorage.gamehub.sprite;
 
 import java.awt.*;
+import java.util.Map;
 
-public final class SpriteAnimation {
+public final class SpriteAnimationWithMode<T> {
 
-    private final SpriteList spriteList;
-
+    private final Map<T, SpriteList> sprites;
+    private final int frames;
     private final long updateFreq;
     private long lastUpdate = System.currentTimeMillis();
+
     private int frame = 0;
 
 
-    public SpriteAnimation(SpriteList spriteList, long updateFreq) {
-        this.spriteList = spriteList;
+    public SpriteAnimationWithMode(Map<T, SpriteList> sprites, int frames, long updateFreq) {
+        this.sprites = sprites;
+        this.frames = frames;
         this.updateFreq = updateFreq;
     }
 
@@ -25,11 +28,11 @@ public final class SpriteAnimation {
 
     public void nextFrame() {
         frame++;
-        if (frame >= spriteList.getSize())
+        if (frame >= frames)
             frame = 0;
     }
 
-    public Image get() {
-        return spriteList.get(frame);
+    public Image get(T mode) {
+        return sprites.get(mode).get(frame);
     }
 }

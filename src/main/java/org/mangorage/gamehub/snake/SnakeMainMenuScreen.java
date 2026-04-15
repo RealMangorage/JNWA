@@ -1,11 +1,11 @@
-package org.mangorage.test.snake;
+package org.mangorage.gamehub.snake;
 
 import org.mangorage.jnwa.api.Event;
 import org.mangorage.jnwa.api.Graphics;
 import org.mangorage.jnwa.api.Screen;
 import org.mangorage.jnwa.api.Window;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
-import org.mangorage.test.MainMenuScreen;
+import org.mangorage.gamehub.MainMenuScreen;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;

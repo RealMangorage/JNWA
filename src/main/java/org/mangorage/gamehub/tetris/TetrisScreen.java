@@ -1,11 +1,11 @@
-package org.mangorage.test.tetris;
+package org.mangorage.gamehub.tetris;
 
 import org.mangorage.jnwa.api.Event;
 import org.mangorage.jnwa.api.Graphics;
 import org.mangorage.jnwa.api.Screen;
 import org.mangorage.jnwa.api.Window;
 import org.mangorage.jnwa.api.event.WindowKeyEvent;
-import org.mangorage.test.MainMenuScreen;
+import org.mangorage.gamehub.MainMenuScreen;
 
 import java.util.Random;
 

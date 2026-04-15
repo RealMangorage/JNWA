@@ -1,4 +1,4 @@
-package org.mangorage.test.pacman.world;
+package org.mangorage.gamehub.pacman.world;
 
 public class WorldContext {
 

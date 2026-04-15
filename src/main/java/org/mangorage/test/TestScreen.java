@@ -1,4 +1,4 @@
-package org.mangorage.test.misc;
+package org.mangorage.test;
 
 import org.mangorage.jnwa.api.Graphics;
 import org.mangorage.jnwa.api.Screen;

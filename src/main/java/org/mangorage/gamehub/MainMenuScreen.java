@@ -1,4 +1,4 @@
-package org.mangorage.test;
+package org.mangorage.gamehub;
 
 import org.mangorage.jnwa.api.Event;
 import org.mangorage.jnwa.api.Graphics;
@@ -8,9 +8,9 @@ import org.mangorage.jnwa.api.event.WindowKeyEvent;
 import org.mangorage.jnwa.api.event.MouseButtonEvent;
 import org.mangorage.jnwa.api.event.MouseMoveEvent;
 import org.mangorage.jnwa.api.event.MouseScrollEvent;
-import org.mangorage.test.pacman.PacManScreen;
-import org.mangorage.test.snake.SnakeMainMenuScreen;
-import org.mangorage.test.tetris.TetrisScreen;
+import org.mangorage.gamehub.pacman.PacManScreen;
+import org.mangorage.gamehub.snake.SnakeMainMenuScreen;
+import org.mangorage.gamehub.tetris.TetrisScreen;
 
 import java.awt.*;
 import java.util.ArrayList;
