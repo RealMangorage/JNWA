@@ -1,6 +1,6 @@
 package org.mangorage.test.pacman.world.entity;
 
-import org.mangorage.nsapi.api.Graphics;
+import org.mangorage.jnwapi.api.Graphics;
 import org.mangorage.test.misc.Direction;
 import org.mangorage.test.pacman.world.WorldContext;
 import org.mangorage.test.sprite.*;

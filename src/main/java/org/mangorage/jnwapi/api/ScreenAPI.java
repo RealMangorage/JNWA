@@ -1,6 +1,6 @@
-package org.mangorage.nsapi.api;
+package org.mangorage.jnwapi.api;
 
-import org.mangorage.nsapi.internal.platform.windows.Win32WindowImpl;
+import org.mangorage.jnwapi.internal.platform.windows.Win32WindowImpl;
 
 import java.util.HashMap;
 import java.util.Map;

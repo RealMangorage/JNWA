@@ -1,13 +1,13 @@
 package org.mangorage.test;
 
-import org.mangorage.nsapi.api.Event;
-import org.mangorage.nsapi.api.Graphics;
-import org.mangorage.nsapi.api.Screen;
-import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.event.WindowKeyEvent;
-import org.mangorage.nsapi.api.event.MouseButtonEvent;
-import org.mangorage.nsapi.api.event.MouseMoveEvent;
-import org.mangorage.nsapi.api.event.MouseScrollEvent;
+import org.mangorage.jnwapi.api.Event;
+import org.mangorage.jnwapi.api.Graphics;
+import org.mangorage.jnwapi.api.Screen;
+import org.mangorage.jnwapi.api.Window;
+import org.mangorage.jnwapi.api.event.WindowKeyEvent;
+import org.mangorage.jnwapi.api.event.MouseButtonEvent;
+import org.mangorage.jnwapi.api.event.MouseMoveEvent;
+import org.mangorage.jnwapi.api.event.MouseScrollEvent;
 import org.mangorage.test.pacman.PacManScreen;
 import org.mangorage.test.snake.SnakeMainMenuScreen;
 import org.mangorage.test.tetris.TetrisScreen;

@@ -1,14 +1,13 @@
 package org.mangorage.test.snake;
 
-import org.mangorage.nsapi.api.Graphics;
-import org.mangorage.nsapi.api.Screen;
-import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.Event;
-import org.mangorage.nsapi.api.event.WindowKeyEvent;
+import org.mangorage.jnwapi.api.Graphics;
+import org.mangorage.jnwapi.api.Screen;
+import org.mangorage.jnwapi.api.Window;
+import org.mangorage.jnwapi.api.Event;
+import org.mangorage.jnwapi.api.event.WindowKeyEvent;
 import org.mangorage.test.MainMenuScreen;
 
 import java.awt.*;
-import java.lang.foreign.Linker;
 import java.util.LinkedList;
 import java.util.Random;
 

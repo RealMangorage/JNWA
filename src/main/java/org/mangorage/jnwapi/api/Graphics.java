@@ -1,4 +1,4 @@
-package org.mangorage.nsapi.api;
+package org.mangorage.jnwapi.api;
 
 import java.awt.Image;
 

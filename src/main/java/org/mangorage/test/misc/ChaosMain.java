@@ -1,7 +1,7 @@
 package org.mangorage.test.misc;
 
-import org.mangorage.nsapi.api.ScreenAPI;
-import org.mangorage.nsapi.api.Window;
+import org.mangorage.jnwapi.api.ScreenAPI;
+import org.mangorage.jnwapi.api.Window;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -1,13 +1,12 @@
-package org.mangorage.nsapi.internal.platform.windows;
+package org.mangorage.jnwapi.internal.platform.windows;
 
-import org.mangorage.nsapi.api.Screen;
-import org.mangorage.nsapi.api.Window;
-import org.mangorage.nsapi.api.WindowConfig;
-import org.mangorage.nsapi.api.event.WindowKeyEvent;
-import org.mangorage.nsapi.api.event.MouseButtonEvent;
-import org.mangorage.nsapi.api.event.MouseMoveEvent;
-import org.mangorage.nsapi.api.event.MouseScrollEvent;
-import org.mangorage.nsapi.internal.platform.EmptyScreen;
+import org.mangorage.jnwapi.api.Screen;
+import org.mangorage.jnwapi.api.Window;
+import org.mangorage.jnwapi.api.event.WindowKeyEvent;
+import org.mangorage.jnwapi.api.event.MouseButtonEvent;
+import org.mangorage.jnwapi.api.event.MouseMoveEvent;
+import org.mangorage.jnwapi.api.event.MouseScrollEvent;
+import org.mangorage.jnwapi.internal.platform.EmptyScreen;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -15,14 +14,12 @@ import java.io.ByteArrayInputStream;
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.lang.foreign.ValueLayout.*;
-import static org.mangorage.nsapi.internal.InternalUtil.downcall;
+import static org.mangorage.jnwapi.internal.InternalUtil.downcall;
 
 public final class Win32WindowImpl implements Window {
 
@@ -110,6 +107,10 @@ public final class Win32WindowImpl implements Window {
 
     private volatile int width;
     private volatile int height;
+
+    private volatile int posX = 0;
+    private volatile int posY = 0;
+
     private volatile String title = "Untitled";
 
     private MemorySegment hwnd;
@@ -430,8 +431,19 @@ public final class Win32WindowImpl implements Window {
     @Override
     public void setPosition(int x, int y) {
         tasks.offer(() -> {
+            this.posX = x;
+            this.posY = y;
+
             try {
-                SetWindowPos.invoke(hwnd, MemorySegment.NULL, x, y, 0, 0, 0x0001 | 0x0004 | 0x0010);
+                SetWindowPos.invoke(
+                        hwnd,
+                        MemorySegment.NULL,
+                        this.posX,
+                        this.posY,
+                        this.width,
+                        this.height,
+                        0x0001 | 0x0004 | 0x0010
+                );
             } catch (Throwable ignored) {}
         });
     }
@@ -446,8 +458,8 @@ public final class Win32WindowImpl implements Window {
                 SetWindowPos.invoke(
                         hwnd,
                         MemorySegment.NULL, // HWND_TOP = NULL is fine
-                        0,
-                        0,
+                        this.posX,
+                        this.posY,
                         this.width,
                         this.height,
                         SWP_NOZORDER | SWP_NOACTIVATE
