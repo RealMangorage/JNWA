@@ -173,7 +173,7 @@ public class MainMenuScreen implements Screen {
         }
 
         if (event instanceof WindowKeyEvent ke && ke.pressed()) {
-            // Note: Adjust .keyCode() or .key() based on your specific Event API
+            // Note: Adjust .keyCode() or .key() based on your specific EventSystem API
             int key = ke.keyCode();
             if (key == java.awt.event.KeyEvent.VK_UP) scrollY -= 50;
             if (key == java.awt.event.KeyEvent.VK_DOWN) scrollY += 50;

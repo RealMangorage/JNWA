@@ -8,6 +8,7 @@ import org.mangorage.nsapi.api.event.WindowKeyEvent;
 import org.mangorage.test.MainMenuScreen;
 
 import java.awt.*;
+import java.lang.foreign.Linker;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -23,7 +24,7 @@ public final class SnakeGameScreen implements Screen {
     private final Random random = new Random();
 
     private long lastMove = 0;
-    private long moveDelay = 120;
+    private long moveDelay = 50;
 
     private boolean dead = false;
 

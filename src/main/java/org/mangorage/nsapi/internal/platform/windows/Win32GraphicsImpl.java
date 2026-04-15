@@ -69,9 +69,9 @@ public final class Win32GraphicsImpl implements Graphics {
     private int lastW, lastH;
 
     private record NativeImage(MemorySegment hBitmap, int width, int height) {}
-    private final Map<Image, NativeImage> imageCache = new IdentityHashMap<>();
-
     private record FontKey(int size, boolean bold) {}
+
+    private final Map<Image, NativeImage> imageCache = new IdentityHashMap<>();
     private final Map<FontKey, MemorySegment> fontCache = new HashMap<>();
 
     public Win32GraphicsImpl(MemorySegment hwnd) {
@@ -98,10 +98,20 @@ public final class Win32GraphicsImpl implements Graphics {
             MemorySegment hFont = fontCache.computeIfAbsent(key, k -> {
                 try {
                     return (MemorySegment) CreateFontW.invoke(
-                            -fontSize, 0, 0, 0,
-                            bold ? 700 : 400, // FW_BOLD : FW_NORMAL
-                            0, 0, 0, 1, 0, 0, 0, 0,
-                            arena.allocateFrom("Arial", StandardCharsets.UTF_16LE)
+                            -fontSize,                         // cHeight: font height (negative = pixel height)
+                            0,                                 // cWidth: average char width (0 = default)
+                            0,                                 // cEscapement: text rotation (0 = none)
+                            0,                                 // cOrientation: glyph orientation (0 = normal)
+                            bold ? 700 : 400,                  // cWeight: FW_BOLD (700) / FW_NORMAL (400)
+                            0,                                 // bItalic: italic (0 = false)
+                            0,                                 // bUnderline: underline (0 = false)
+                            0,                                 // bStrikeOut: strikeout (0 = false)
+                            1,                                 // iCharSet: DEFAULT_CHARSET
+                            0,                                 // iOutPrecision: default output precision
+                            0,                                 // iClipPrecision: default clipping precision
+                            0,                                 // iQuality: default rendering quality
+                            0,                                 // iPitchAndFamily: default pitch/family
+                            arena.allocateFrom("Arial", StandardCharsets.UTF_16LE) // pszFaceName: font name (UTF-16)
                     );
                 } catch (Throwable t) { throw new RuntimeException(t); }
             });
@@ -151,13 +161,18 @@ public final class Win32GraphicsImpl implements Graphics {
         if (w != lastW || h != lastH) {
             try {
                 if (hBitmap != null && !hBitmap.equals(MemorySegment.NULL)) {
-                    if (defaultBitmap != null) SelectObject.invoke(hdcMem, defaultBitmap);
+                    if (defaultBitmap != null)
+                        SelectObject.invoke(hdcMem, defaultBitmap);
+
                     DeleteObject.invoke(hBitmap);
                 }
                 hBitmap = (MemorySegment) CreateCompatibleBitmap.invoke(hdcScreen, w, h);
                 MemorySegment oldBmp = (MemorySegment) SelectObject.invoke(hdcMem, hBitmap);
-                if (defaultBitmap == null) defaultBitmap = oldBmp;
-                lastW = w; lastH = h;
+                if (defaultBitmap == null)
+                    defaultBitmap = oldBmp;
+
+                lastW = w;
+                lastH = h;
             } catch (Throwable t) { throw new RuntimeException(t); }
         }
     }
@@ -181,14 +196,24 @@ public final class Win32GraphicsImpl implements Graphics {
         return getBounds()[1];
     }
 
-
-
     private int[] getBounds() {
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment rect = arena.allocate(16);
+
             GetClientRect.invoke(hwnd, rect);
-            return new int[]{ rect.get(JAVA_INT, 8), rect.get(JAVA_INT, 12) };
-        } catch (Throwable t) { return new int[]{0, 0}; }
+
+            int left   = rect.get(JAVA_INT, 0);
+            int top    = rect.get(JAVA_INT, 4);
+            int right  = rect.get(JAVA_INT, 8);
+            int bottom = rect.get(JAVA_INT, 12);
+
+            return new int[] {
+                    right - left,
+                    bottom - top
+            };
+        } catch (Throwable t) {
+            return new int[] {0, 0};
+        }
     }
 
     @Override
@@ -197,17 +222,24 @@ public final class Win32GraphicsImpl implements Graphics {
         if (lastW <= 0 || lastH <= 0) return;
         try (Arena arena = Arena.ofConfined()) {
             int winColor = ((argb & 0xFF) << 16) | (argb & 0xFF00) | ((argb >> 16) & 0xFF);
+
             MemorySegment brush = (MemorySegment) CreateSolidBrush.invoke(winColor);
             MemorySegment rect = arena.allocate(16);
-            rect.set(JAVA_INT, 0, 0); rect.set(JAVA_INT, 4, 0);
-            rect.set(JAVA_INT, 8, lastW); rect.set(JAVA_INT, 12, lastH);
+
+            rect.set(JAVA_INT, 0, 0);
+            rect.set(JAVA_INT, 4, 0);
+            rect.set(JAVA_INT, 8, lastW);
+            rect.set(JAVA_INT, 12, lastH);
+
             FillRect.invoke(hdcMem, rect, brush);
             DeleteObject.invoke(brush);
         } catch (Throwable ignored) {}
     }
 
     public void present() {
-        if (lastW <= 0 || lastH <= 0) return;
+        if (lastW <= 0 || lastH <= 0)
+            return;
+
         try {
             BitBlt.invoke(hdcScreen, 0, 0, lastW, lastH, hdcMem, 0, 0, 0x00CC0020);
         } catch (Throwable ignored) {}
@@ -259,8 +291,10 @@ public final class Win32GraphicsImpl implements Graphics {
             SelectObject.invoke(hdcMem, oldP);
             SelectObject.invoke(hdcMem, oldB);
 
-            if (outline) DeleteObject.invoke(pen);
-            else DeleteObject.invoke(brush);
+            if (outline)
+                DeleteObject.invoke(pen);
+            else
+                DeleteObject.invoke(brush);
 
         } catch (Throwable t) {
             throw new RuntimeException(t);
@@ -273,10 +307,19 @@ public final class Win32GraphicsImpl implements Graphics {
             MemorySegment brush = outline ? (MemorySegment) GetStockObject.invoke(5) : (MemorySegment) CreateSolidBrush.invoke(currentColorRef);
             MemorySegment oldP = (MemorySegment) SelectObject.invoke(hdcMem, pen);
             MemorySegment oldB = (MemorySegment) SelectObject.invoke(hdcMem, brush);
+
             Rectangle.invoke(hdcMem, x, y, x + w, y + h);
-            SelectObject.invoke(hdcMem, oldP); SelectObject.invoke(hdcMem, oldB);
-            if (outline) DeleteObject.invoke(pen); else DeleteObject.invoke(brush);
-        } catch (Throwable t) { throw new RuntimeException(t); }
+            SelectObject.invoke(hdcMem, oldP);
+            SelectObject.invoke(hdcMem, oldB);
+
+            if (outline)
+                DeleteObject.invoke(pen);
+            else
+                DeleteObject.invoke(brush);
+
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     // =========================
@@ -295,18 +338,26 @@ public final class Win32GraphicsImpl implements Graphics {
 
             SelectObject.invoke(memDC, old);
             DeleteDC.invoke(memDC);
-        } catch (Throwable t) { throw new RuntimeException(t); }
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     private NativeImage toNativeImage(Image image) {
         BufferedImage bi = (image instanceof BufferedImage b) ? b : toBufferedImage(image);
-        int w = bi.getWidth(); int h = bi.getHeight();
+        int w = bi.getWidth();
+        int h = bi.getHeight();
+
         int[] pixels = bi.getRGB(0, 0, w, h, null, 0, w);
 
         try (Arena arena = Arena.ofConfined()) {
             MemorySegment bmi = arena.allocate(40);
-            bmi.set(JAVA_INT, 0, 40); bmi.set(JAVA_INT, 4, w); bmi.set(JAVA_INT, 8, -h);
-            bmi.set(JAVA_SHORT, 12, (short) 1); bmi.set(JAVA_SHORT, 14, (short) 32);
+
+            bmi.set(JAVA_INT, 0, 40);
+            bmi.set(JAVA_INT, 4, w);
+            bmi.set(JAVA_INT, 8, -h);
+            bmi.set(JAVA_SHORT, 12, (short) 1);
+            bmi.set(JAVA_SHORT, 14, (short) 32);
 
             MemorySegment ppvBits = arena.allocate(ADDRESS);
             MemorySegment hLocalBitmap = (MemorySegment) CreateDIBSection.invoke(hdcScreen, bmi, 0, ppvBits, MemorySegment.NULL, 0);
@@ -325,7 +376,9 @@ public final class Win32GraphicsImpl implements Graphics {
                 pixelView.setAtIndex(JAVA_INT, i, (b) | (g << 8) | (r << 16) | (a << 24));
             }
             return new NativeImage(hLocalBitmap, w, h);
-        } catch (Throwable t) { throw new RuntimeException(t); }
+        } catch (Throwable t) {
+            throw new RuntimeException(t);
+        }
     }
 
     private BufferedImage toBufferedImage(Image img) {
@@ -342,15 +395,25 @@ public final class Win32GraphicsImpl implements Graphics {
 
     public void dispose() {
         try {
-            if (defaultBitmap != null && hdcMem != null) SelectObject.invoke(hdcMem, defaultBitmap);
-            if (hdcMem != null) DeleteDC.invoke(hdcMem);
-            if (hBitmap != null && !hBitmap.equals(MemorySegment.NULL)) DeleteObject.invoke(hBitmap);
+            if (defaultBitmap != null && hdcMem != null)
+                SelectObject.invoke(hdcMem, defaultBitmap);
+
+            if (hdcMem != null)
+                DeleteDC.invoke(hdcMem);
+
+            if (hBitmap != null && !hBitmap.equals(MemorySegment.NULL))
+                DeleteObject.invoke(hBitmap);
+
             ReleaseDC.invoke(hwnd, hdcScreen);
 
-            for (NativeImage cached : imageCache.values()) DeleteObject.invoke(cached.hBitmap());
+            for (NativeImage cached : imageCache.values())
+                DeleteObject.invoke(cached.hBitmap());
+
             imageCache.clear();
 
-            for (MemorySegment hFont : fontCache.values()) DeleteObject.invoke(hFont);
+            for (MemorySegment hFont : fontCache.values())
+                DeleteObject.invoke(hFont);
+
             fontCache.clear();
         } catch (Throwable ignored) {}
     }
