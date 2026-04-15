@@ -1,4 +1,4 @@
-package org.mangorage.jnwapi.api;
+package org.mangorage.jnwa.api;
 
 
 public record WindowConfig(

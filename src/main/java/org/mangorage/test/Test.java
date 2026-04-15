@@ -1,7 +1,7 @@
 package org.mangorage.test;
 
-import org.mangorage.jnwapi.api.ScreenAPI;
-import org.mangorage.jnwapi.api.Window;
+import org.mangorage.jnwa.api.ScreenAPI;
+import org.mangorage.jnwa.api.Window;
 
 import java.io.IOException;
 

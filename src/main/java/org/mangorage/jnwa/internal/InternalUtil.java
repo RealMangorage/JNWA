@@ -1,4 +1,4 @@
-package org.mangorage.jnwapi.internal;
+package org.mangorage.jnwa.internal;
 
 import java.lang.foreign.FunctionDescriptor;
 import java.lang.foreign.Linker;

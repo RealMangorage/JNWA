@@ -1,6 +1,6 @@
 package org.mangorage.test.pacman.world.entity;
 
-import org.mangorage.jnwapi.api.Graphics;
+import org.mangorage.jnwa.api.Graphics;
 
 public abstract class Entity {
 

@@ -1,7 +1,7 @@
 package org.mangorage.test.pacman;
 
-import org.mangorage.jnwapi.api.*;
-import org.mangorage.jnwapi.api.event.WindowKeyEvent;
+import org.mangorage.jnwa.api.*;
+import org.mangorage.jnwa.api.event.WindowKeyEvent;
 import org.mangorage.test.MainMenuScreen;
 import org.mangorage.test.misc.Direction;
 import org.mangorage.test.pacman.world.entity.PacManEntity;

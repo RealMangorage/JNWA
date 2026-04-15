@@ -1,11 +1,11 @@
 package org.mangorage.test.misc;
 
-import org.mangorage.jnwapi.api.Graphics;
-import org.mangorage.jnwapi.api.Screen;
-import org.mangorage.jnwapi.api.Window;
-import org.mangorage.jnwapi.api.Event;
-import org.mangorage.jnwapi.api.event.MouseMoveEvent;
-import org.mangorage.jnwapi.api.event.WindowKeyEvent;
+import org.mangorage.jnwa.api.Graphics;
+import org.mangorage.jnwa.api.Screen;
+import org.mangorage.jnwa.api.Window;
+import org.mangorage.jnwa.api.Event;
+import org.mangorage.jnwa.api.event.MouseMoveEvent;
+import org.mangorage.jnwa.api.event.WindowKeyEvent;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;

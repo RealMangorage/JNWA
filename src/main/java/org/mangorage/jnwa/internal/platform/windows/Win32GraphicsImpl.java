@@ -1,6 +1,6 @@
-package org.mangorage.jnwapi.internal.platform.windows;
+package org.mangorage.jnwa.internal.platform.windows;
 
-import org.mangorage.jnwapi.api.Graphics;
+import org.mangorage.jnwa.api.Graphics;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -12,7 +12,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import static java.lang.foreign.ValueLayout.*;
-import static org.mangorage.jnwapi.internal.InternalUtil.downcall;
+import static org.mangorage.jnwa.internal.InternalUtil.downcall;
 
 public final class Win32GraphicsImpl implements Graphics {
 

@@ -1,6 +1,6 @@
-package org.mangorage.jnwapi.api;
+package org.mangorage.jnwa.api;
 
-import org.mangorage.jnwapi.internal.platform.windows.Win32WindowImpl;
+import org.mangorage.jnwa.internal.platform.windows.Win32WindowImpl;
 
 import java.util.HashMap;
 import java.util.Map;

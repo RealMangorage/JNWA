@@ -1,12 +1,12 @@
-package org.mangorage.jnwapi.internal.platform.windows;
+package org.mangorage.jnwa.internal.platform.windows;
 
-import org.mangorage.jnwapi.api.Screen;
-import org.mangorage.jnwapi.api.Window;
-import org.mangorage.jnwapi.api.event.WindowKeyEvent;
-import org.mangorage.jnwapi.api.event.MouseButtonEvent;
-import org.mangorage.jnwapi.api.event.MouseMoveEvent;
-import org.mangorage.jnwapi.api.event.MouseScrollEvent;
-import org.mangorage.jnwapi.internal.platform.EmptyScreen;
+import org.mangorage.jnwa.api.Screen;
+import org.mangorage.jnwa.api.Window;
+import org.mangorage.jnwa.api.event.WindowKeyEvent;
+import org.mangorage.jnwa.api.event.MouseButtonEvent;
+import org.mangorage.jnwa.api.event.MouseMoveEvent;
+import org.mangorage.jnwa.api.event.MouseScrollEvent;
+import org.mangorage.jnwa.internal.platform.EmptyScreen;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import static java.lang.foreign.ValueLayout.*;
-import static org.mangorage.jnwapi.internal.InternalUtil.downcall;
+import static org.mangorage.jnwa.internal.InternalUtil.downcall;
 
 public final class Win32WindowImpl implements Window {
 
